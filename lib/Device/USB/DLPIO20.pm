@@ -1,4 +1,4 @@
-package Device::USB::DLP-IO20;
+package Device::USB::DLPIO20;
 
 use 5.010000;
 use strict;
@@ -52,16 +52,16 @@ __END__
 
 =head1 NAME
 
-Device::USB::DLP-IO20 - Perl extension for blah blah blah
+Device::USB::DLPIO20 - Perl extension for blah blah blah
 
 =head1 SYNOPSIS
 
-  use Device::USB::DLP-IO20;
+  use Device::USB::DLPIO20;
   blah blah blah
 
 =head1 DESCRIPTION
 
-Stub documentation for Device::USB::DLP-IO20
+Stub documentation for Device::USB::DLPIO20
 
 Blah blah blah.
 

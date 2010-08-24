@@ -1,7 +1,7 @@
 Device-USB-DLP-IO20 version 0.01
 =============================
 
-Device::USB::DLP-IO20 allows your PC to control an 20-port IO board from
+Device::USB::DLPIO20 allows your PC to control an 20-port IO board from
 http://www.dlpdesign.com/
 
 INSTALLATION
