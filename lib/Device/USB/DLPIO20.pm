@@ -12,37 +12,110 @@ use Carp;
 
 our $VERSION = '0.01';
 
-sub relay_on
+our %portmap = (
+    AN0 => 0,
+    AN1 => 1,
+    AN2 => 2,
+    AN3 => 3,
+    AN4 => 4,
+    AN5 => 5,
+    AN6 => 6,
+    AN7 => 7,
+    AN8 => 8,
+    AN9 => 9,
+    AN10 => 10,
+    AN11 => 11,
+    AN12 => 12
+    AN13 => 13,
+    RA4 => 14,
+    P5 => 15
+    P6 => 16,
+    P7 => 17,
+    RB7 => 18,
+    RB6 => 19
+);
+
+sub ping
 {
-    my $port = shift;
-    check_port($port);
-    relay_set($port,1);
+    # Ping device; return 1 if expected return code 0x59
+    output("\x27");
+    input() == x59;
 }
 
-sub relay_off
+sub led_flash
 {
-    my $port = shift;
-    check_port($port);
-    relay_set($port,0);
+    output("\x28");
+}
+
+sub led_on
+{
+    output("\x29\x00");
+}
+
+sub led_off
+{
+    output("\x29\x00");
 }
 
 sub relay_set
 {
-    my $port = shift;
-    my $state = shift;
-    
-    $state = $state ? 1 : 0;
-    
-    open TTY, ">/dev/ttyUSB0" or carp "$!";
-    print TTY chr(255),chr($port),chr($state);
-    close TTY;
+    my $rly = shift || 1;
+    output("\x30".chr($rly)."\x00");
 }
-    
-sub check_port
+
+sub relay_reset
+{
+    my $rly = shift || 1;
+    output("\x30".chr($rly)."\x01");
+}
+
+sub digital_input
 {
     my $port = shift;
-    unless ( $port =~ /^\d+$/ ){ carp("Invalid port number: $port"); };
-    if ( $port > 8 or $port < 1 ) { carp("Port number out of range: $port"); };    
+    if (  defined $portmap{$port} ) {
+	output("\x35",chr($portmap{$port}),"\x01\x00");
+    }
+    else {
+	die "digital_input - unknown port: $port";
+    }
+}
+
+sub digital_output
+{
+    my $port = shift;
+    my $high = shift;
+    
+    if (  defined $portmap{$port} ) {
+	if ($set) {
+	    output("\x35".chr($portmap{$port})."\x00\x01");
+	} else {
+	    output("\x35".chr($portmap{$port})."\x00\x00");
+	}
+    }
+    else {
+	die "digital_input - unknown port: $port";
+    }
+}
+
+# counter functions (x36 and x37) not implemented
+
+
+
+
+# Lib functions (not exported)
+
+sub output
+{
+    my $cmd = shift;
+    my $len = length($cmd);
+    
+    print TTY chr($len+1),$cmd;
+}
+
+sub input
+{
+    # Read port
+    # Timeout 1 sec or so
 }
 
 
