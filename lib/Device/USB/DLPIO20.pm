@@ -11,7 +11,8 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw( init ping
 led_flash led_on led_off 
 relay_set relay_reset 
-sensor_detect );
+sensor_detect sensor_start sensor_read 
+ad_read );
 
 use Carp;
 
@@ -119,16 +120,26 @@ sub sensor_start
 {
     my $port = shift;
     _getport(\$port);
-    output("x40",chr($port));
+    output("\x40".chr($port));
 }
 
 sub sensor_read
 {
     my $port = shift;
     _getport(\$port);
-    output("x41",chr($port));
+    output("\x41".chr($port));
     my $tstr = input(2);
     my @t = split (//, $tstr);
+    return ord($t[0])+256*ord($t[1]);
+}
+
+sub ad_read
+{
+    my $port = shift;
+    _getport(\$port);
+    output("\x50".chr($port));
+    my $x = input(2);
+    my @t = split (//, $x);
     return ord($t[0])+256*ord($t[1]);
 }
 

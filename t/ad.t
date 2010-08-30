@@ -15,12 +15,6 @@ BEGIN { use_ok('Device::USB::DLPIO20') };
 
 
 init; ok(1);
-my $serial = sensor_detect('AN7');
-my @s =
-map(ord, split(//, $serial));
-printf("%x%x%x%x%x%x%x%x\n", @s);
-ok(1);
-sensor_start('AN7');
-my $t = sensor_read('AN7');
-print "T=$t\n";
+my $t = ad_read('AN3');
+print "V=$t\n";
 ok(1);
